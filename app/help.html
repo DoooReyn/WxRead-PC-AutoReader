@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>微读</title>
+  <style>
+    * {
+      -moz-user-select: none;
+      -moz-user-select: none;
+      -o-user-select: none;
+      -khtml-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    body {
+      background-color: #ffffff;
+      background-repeat: space;
+      background-size: auto;
+    }
+
+    .big-text {
+      font-size: big;
+    }
+
+    .link-text {
+      font-size: initial;
+      text-align: justify;
+      text-indent: 2em;
+    }
+
+    .link-text-color {
+      color: #0078d7;
+    }
+
+    .help {
+      margin-left: 36px;
+      margin-right: 36px;
+      line-height: 2;
+    }
+
+    .big-title {
+      text-align: center;
+      font-weight: bolder;
+      font-size: xx-large;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-weight: bolder;
+      font-size: x-large;
+    }
+
+    /* Common button styles */
+    .button {
+      font-size: 16px;
+      float: right;
+      right: 0px;
+      bottom: 0px;
+      width: 100%;
+      height: 5em;
+      display: block;
+      border: none;
+      background: none;
+      color: #fff;
+      background-color: #00679b;
+      position: fixed;
+      /* z-index: 1; */
+    }
+
+    .button:focus {
+      outline: none;
+    }
+
+    .button>span {
+      vertical-align: middle;
+    }
+
+    /* Typography and Roundedness */
+    .button--text-thick {
+      font-weight: 600;
+    }
+
+    /* Individual button styles */
+
+    /* Ujarak */
+    .button--ujarak {
+      -webkit-transition: border-color 0.4s, color 0.4s;
+      transition: border-color 0.4s, color 0.4s;
+    }
+
+    .button--ujarak::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #37474f;
+      z-index: -1;
+      opacity: 0;
+      -webkit-transform: scale3d(0.7, 1, 1);
+      transform: scale3d(0.7, 1, 1);
+      -webkit-transition: -webkit-transform 0.4s, opacity 0.4s;
+      transition: transform 0.4s, opacity 0.4s;
+      -webkit-transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1);
+      transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1);
+    }
+
+    .button--ujarak.button--round-s::before {
+      border-radius: 2px;
+    }
+
+    .button--ujarak.button--inverted::before {
+      background: #7986cb;
+    }
+
+    .button--ujarak,
+    .button--ujarak::before {
+      -webkit-transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1);
+      transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1);
+    }
+
+    .button--ujarak:hover {
+      color: #fff;
+      border-color: #37474f;
+    }
+
+    .button--ujarak.button--inverted:hover {
+      color: #37474f;
+      border-color: #fff;
+    }
+
+    .button--ujarak:hover::before {
+      opacity: 1;
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
+    }
+
+    .update-mask {
+      z-index: 10;
+      display: none;
+    }
+
+    .update-mask-1 {
+      position: fixed;
+      left: 0px;
+      top: 0px;
+      background: #000;
+      width: 100%;
+      height: 100%;
+      opacity: 0.5;
+    }
+
+    .update-mask-2 {
+      position: fixed;
+      display: block;
+      left: 0px;
+      top: 0px;
+      width: 100%;
+      height: 100%;
+    }
+
+    .update-dialog {
+      position: relative;
+      background: #eee;
+      background-image: url();
+      width: 320px;
+      height: 160px;
+      border-radius: 5px;
+      margin: 0 auto;
+      opacity: 1;
+    }
+
+    #update-dialog-header {
+      height: 38px;
+      background: #00679b;
+    }
+
+    #update-dialog-header-right {
+      position: absolute;
+      width: 25px;
+      height: 25px;
+      border-radius: 5px;
+      background: rgb(238, 115, 115);
+      color: #fff;
+      right: 5px;
+      top: 5px;
+      text-align: center;
+    }
+
+    #update-dialog-header-title {
+      position: relative;
+      color: #fff;
+      top: 5px;
+      left: auto;
+      font-size: large;
+      text-align: center;
+    }
+
+    #update-dialog-message {
+      position: relative;
+      color: #000;
+      display: block;
+      margin-top: 2em;
+      text-align: center;
+    }
+
+    #update-dialog-progress {
+      position: absolute;
+      margin: 0 auto;
+      display: none;
+      height: 1.5em;
+      left: 25%;
+      bottom: 12.5%;
+    }
+
+    #update-dialog-buttons {
+      position: relative;
+      margin: 0 auto;
+      display: block;
+      width: 100%;
+      height: 100%;
+      visibility: visible;
+    }
+
+    #update-dialog-buttons-confirm {
+      position: absolute;
+      background: rgb(255, 228, 74);
+      color: #000;
+      top: 15px;
+      left: 3.5em;
+      display: block;
+      width: 80px;
+      height: 30px;
+      border-radius: 5px;
+      border-color: #000;
+      border-style: solid;
+      border-width: 2px;
+      text-align: center;
+    }
+
+    #update-dialog-buttons-cancel {
+      position: absolute;
+      background-color: rgb(250, 158, 158);
+      color: #000;
+      right: 3.5em;
+      top: 15px;
+      display: block;
+      width: 80px;
+      height: 30px;
+      border-radius: 5px;
+      border-color: #000;
+      border-style: solid;
+      border-width: 2px;
+      text-align: center;
+    }
+
+    .update-dialog-buttons-text {
+      font-size: small;
+      display: block;
+      text-align: center;
+      margin: 0 auto;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="help">
+    <!-- 悬浮按钮 -->
+    <button class="button button--ujarak button--text-thick" onclick="openReadPage()">
+      开始阅读
+    </button>
+
+    <div class="subtitle">微读</div>
+    <hr style="border: 3 double #000000;" width="100%" color="#777" cb 9 size="3" />
+    <span style="text-indent:2em">
+      <p>
+        <b>微读</b>最开始是在新冠疫情流行之后被困在家里的期间写的，当时微读还只是一个基于浏览器的注入脚本的方案，即通过添加书签的方式手动点击之后开启自动阅读，基于此可以实现<b>挂机</b>的目的，开源之后得到了不少好评和改良反馈。
+      </p>
+      <p>但正是因为基于浏览器，所以也有很多限制。其中最严重的问题就是，定时器在浏览器环境中是不稳定的，当浏览器退到后台后，调用周期会变长，甚至可能会停止。为此我使用了WebWorker解决了定时器问题。</p>
+      <p>
+        本以为完美了，然而不久之后，微读貌似引起了企鹅的注意，很多用户反馈不能用了，原来是企鹅对WebWorker做了安全限制，这就意味着WebWorker被一棍打死了。那时我烦恼了一天😒，在苦苦寻觅解决方案之后，通过一个第三方音频播放库，在使用时自动播放一个空音频，使得浏览器退到后台定时器也能正常工作，这样处理之后总算达到了“曲线救国”的目的。之后有网友反馈挂机时好像有听到很小的沙沙声。很抱歉，当时我也是没有别的办法了😭。
+      </p>
+
+      <p>
+        这次闲下来之后，我接触到一些electron的文章，打算入手electron玩玩，正好想到微读或许可以用一下，就开始计划将它改造成客户端。说干就干✊，总共算下来，从计划开始，到开发完成，大概花了一周的时间来调试和优化。因为我不是前端程序员，HTML、CSS都只是知道一点，又是第一次上手electron，所以花了不少时间琢磨，不得不说，瞎折腾真的蛮辛苦的😂。
+      </p>
+      <p>当然，所有的辛苦都是值得的，加上electron的光环之后，微读开始进化了！这次释出的第一个版本，不仅绕过了定时器问题，我还添加了一些新的功能来提升用户体验，现在你可以：</p>
+      <li>控制自动阅读开关</li>
+      <li>打开微读后继续上次阅读页面</li>
+      <li>切换日间和夜间主题</li>
+      <li>自由调节阅读速度</li>
+      <li>读完一本书后会通过系统通知及时告知</li>
+      <li><b>2020.08.05</b>新增功能：导出读书笔记（Markdown格式）</li>
+      <li><b>2020.08.07</b>新增功能：新增获取最新版本并自动安装更新</li>
+
+      <p>
+        最后，
+        <li>你可以把微读当作一款辅助微信读书的阅读工具，或是一款纯粹的微信读书的挂机工具。</li>
+        <li>为了提升使用体验，我故意将菜单栏去掉了，作为升级将使用快捷键，记住几个简单的快捷键对你来说很有帮助。</li>
+        <li>如果你有意见或建议，可以在仓库中提issue；没有Github账号的可以给我发邮件，邮件请注明主题<b>“我给微读提意见”</b>；当然，如果你不嫌麻烦，可以给微读仓库增加一个star吗？😊</li>
+        <li>开发不易，或许你可以请我喝杯咖啡☕。什么？下次一定？！我知道你们都是好孩子，不会这样对我的🙉。</li>
+      </p>
+
+    </span>
+    <hr style="border: 1 double #525252;" width="100%" color="#525252" cb 9 size="1" />
+    <!-- 关于 -->
+    <div class="big-text">
+      仓库:
+      <a class="link-text-color" id="openGithubRepo" href="https://github.com/DoooReyn/WxRead-WebAutoReader">Github</a>
+    </div>
+    <div class="big-text">
+      作者:
+      <a class="link-text-color" id="openGithubProfile" href="https://github.com/DoooReyn">DoooReyn</a>
+    </div>
+    <div class="big-text">
+      邮件:
+      <span style="color: #0078d7;">jl88744653@gmail.com</span>
+    </div>
+    <div class="big-text">版本: 1.3.0</div>
+    <div class="big-text">日期: 2020年8月5日00点08分</div>
+
+    <!-- 快捷键 -->
+    <div class="subtitle">快捷键</div>
+    <hr style="border: 2 double #000000;" width="100%" color="#000" cb 9 size="2" />
+    <li>[F1] 查看帮助</li>
+    <li>[F5] 回到首页</li>
+    <li>[F9] 切换主题</li>
+    <li>[F10] 自动阅读开关</li>
+    <li>[F11] 切换全屏</li>
+    <li>[F12] 导出读书笔记</li>
+    <li>[+] 滚动加速</li>
+    <li>[-] 滚动减速</li>
+    <li>[↑] 上滑</li>
+    <li>[↓] 下滑</li>
+    <li>[←] 上一章</li>
+    <li>[→] 下一章</li>
+    <li>[PgUp] 上翻页</li>
+    <li>[PgDn] 下翻页</li>
+    <li>[Home] 滑到顶部</li>
+    <li>[End] 滑到底部</li>
+
+    <!-- 支持 -->
+    <div class="subtitle">支持</div>
+    <hr style="border: 2 double #000000;" width="100%" color="#000" cb 9 size="2" />
+    <div class="sponsor" style="text-align: center;">
+      <img alt="下次一定？" src="./sponsor.jpeg" height="370" width="270" />
+      <p style="text-align: center; font-size: large;">🙊👨‍💻💦 🙏☕💰 👉😊💖</p>
+      <div style="padding-bottom: 5em;"></div>
+    </div>
+  </div>
+
+  <div class="update-mask" id="update-mask">
+    <div class="update-mask-1" id="update-mask-1"></div>
+    <div class="update-mask-2" id="update-mask-2">
+      <div class="update-dialog">
+        <div id="update-dialog-header">
+          <div id="update-dialog-header-title">版本更新</div>
+          <div id="update-dialog-header-right" onclick="closeUpdateDialog()">x</div>
+        </div>
+        <div id="update-dialog-message">检测到新版本，是否立即更新？</div>
+        <div id="update-dialog-buttons">
+          <div id="update-dialog-buttons-confirm">
+            <div class="update-dialog-buttons-text" onclick="confirmToUpdate()">确定</div>
+          </div>
+          <div id="update-dialog-buttons-cancel" onclick="closeUpdateDialog()">
+            <div class="update-dialog-buttons-text">取消</div>
+          </div>
+        </div>
+        <progress max="100" value="0" id="update-dialog-progress"></progress>
+      </div>
+    </div>
+  </div>
+
+  <script src="./src/renderer.js"></script>
+</body>
+
+</html>

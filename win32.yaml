@@ -1,0 +1,44 @@
+directories:
+  output: build/win32
+  buildResources: build/win32
+productName: wereader
+appId: cn.wu57.wereader
+copyright: 未经允许，禁止修改，禁止用于商业目的
+compression: normal
+asar: true
+publish:
+  - provider: generic
+    url: 'https://wu57.cn/files/'
+files:
+  - filter:
+      - '!.vscode/**/*'
+      - '!.git/**/*'
+      - '!package-lock.json'
+      - '!*.md'
+      - '!*.yaml'
+      - '!.gitignore'
+      - '!.babelrc'
+      - '!build/**/*'
+      - '!packages/**/*'
+      - '!*.js'
+dmg:
+  window:
+    x: 0
+    'y': 0
+    width: 480
+    height: 320
+win:
+  icon: ./app/app.ico
+nsis:
+  oneClick: false
+  guid: wereader
+  perMachine: false
+  allowElevation: true
+  allowToChangeInstallationDirectory: true
+  installerIcon: ./app/app.ico
+  uninstallerIcon: ./app/app.ico
+  installerHeaderIcon: ./app/app.ico
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: wereader
+electronVersion: 9.1.1

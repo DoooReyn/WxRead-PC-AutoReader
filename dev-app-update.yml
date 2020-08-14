@@ -1,0 +1,3 @@
+provider: generic
+url: "https://wu57.cn/files/"
+updaterCacheDirName: "wereader-updater"
