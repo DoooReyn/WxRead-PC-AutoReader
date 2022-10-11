@@ -4,6 +4,12 @@
 
 **WxRead-PC-AutoReader** is a PC client for [微信读书](https://weread.qq.com).
 
+### 新版本发布啦！！！欢迎大家尝鲜！！！
+
+- 新版使用 PyQt5 作为基础框架，且代码完全开源，大家可以戳戳小手指点下关注 👉 [WxReader2.0](https://github.com/DoooReyn/WxReader)
+- 另外因为设备限制，只打包了 Windows 版本，原则上是可以跨平台的，有条件的可以试试
+- [新版本下载包传送门](https://github.com/DoooReyn/WxReader/releases)
+
 ### 升级通知
 
 新版本正在研发中，请各位静待佳音，未来一个月内发布新的正式版应该问题不大。
